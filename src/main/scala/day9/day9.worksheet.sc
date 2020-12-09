@@ -4,10 +4,8 @@ import scala.io.Source
 val input = Source.fromFile("src/main/resources/day9/input.txt").getLines().toList.map(BigInt(_))
 val p = 25
 
-def hasSumIn(target: BigInt, xs: List[BigInt]): Boolean = (for {
-    x1 <- xs
-    x2 <- xs if (x2 < x1 && x2 + x1 == target)
-  } yield (x1, x2)).nonEmpty
+def hasSumIn(target: BigInt, xs: List[BigInt]): Boolean =
+  xs.combinations(2).exists(_.sum == target)
 
 val exception = input.view.sliding(p + 1).find(range => !hasSumIn(range.last, range.take(p).toList)).get.last
 
