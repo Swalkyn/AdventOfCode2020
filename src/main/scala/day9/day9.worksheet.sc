@@ -1,4 +1,3 @@
-import scala.annotation.tailrec
 import scala.io.Source
 
 val input = Source.fromFile("src/main/resources/day9/input.txt").getLines().toList.map(BigInt(_))
