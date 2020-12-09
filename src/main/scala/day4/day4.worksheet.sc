@@ -5,17 +5,14 @@ val input = Source.fromFile("src/main/resources/day4/input.txt").getLines().toLi
 val field = raw"([a-z]+):(\S+)".r
 val hgtin = raw"(\d{2})in".r
 val hgtcm = raw"(\d{3})cm".r
-def fourDigitsRange(s: String, min: Int, max: Int): Boolean = {
-  val n = raw"(\d{4})".r.findFirstIn(s).getOrElse("-1").toInt
-  (n >= min) && (n <= max)
-}
+
 val fieldsValidation = Map(
-  "ecl" -> ((s: String) => Set("amb", "blu", "brn", "gry", "grn", "hzl", "oth").contains(s)),
-  "pid" -> ((s: String) => raw"\d{9}".r.matches(s)),
-  "hcl" -> ((s: String) => raw"#[a-f0-9]{6}".r.matches(s)),
-  "byr" -> ((s: String) => fourDigitsRange(s, 1920, 2002)),
-  "iyr" -> ((s: String) => fourDigitsRange(s, 2010, 2020)),
-  "eyr" -> ((s: String) => fourDigitsRange(s, 2020, 2030)),
+  "ecl" -> (Set("amb", "blu", "brn", "gry", "grn", "hzl", "oth").contains(_)),
+  "pid" -> (raw"\d{9}".r.matches(_)),
+  "hcl" -> (raw"#[a-f0-9]{6}".r.matches(_)),
+  "byr" -> ((_: String).toIntOption.exists((1920 to 2002).contains)),
+  "iyr" -> ((_: String).toIntOption.exists((2010 to 2020).contains)),
+  "eyr" -> ((_: String).toIntOption.exists((2020 to 2030).contains)),
   "hgt" -> ((s: String) => s match {
     case hgtcm(h) => (h.toInt >= 150) && (h.toInt <= 193)
     case hgtin(h) => (h.toInt >= 59) && (h.toInt <= 76)
@@ -42,8 +39,6 @@ def isPassValid2(pass: String): Boolean = {
   mandatoryFields.subsetOf(fieldSet)
 }
 
-
 val passports = groupPassFields(input, List())
 passports.map(isPassValid).count(identity)
-passports(4)
 passports.map(isPassValid2).count(identity)
