@@ -10,6 +10,8 @@ val (busID, dTime) = busses.map(ts => (ts, LazyList.iterate(0)(_ + ts).find(_ >=
 busID * (dTime.get - departure)
 
 val busses2 = sndLine.zipWithIndex.filter(_._1 != "x").map{ case (bus, i) => (BigInt(bus), BigInt(i % bus.toInt)) }.toList
+// This solution only works because bus IDs are primes.
+// See https://en.wikipedia.org/wiki/Chinese_remainder_theorem
 busses2.tail.foldLeft(busses2.head) {
   case ((m1, r1), (m2, r2)) => (m1 * m2, LazyList.iterate(r1)(_ + m1).find(i => (i + r2) % m2 == 0).get)
 }._2
